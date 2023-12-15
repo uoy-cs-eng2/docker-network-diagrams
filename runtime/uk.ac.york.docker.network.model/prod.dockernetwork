@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dn:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dn="http://cs.york.ac.uk/eng2/dockerNetwork/1.0.0">
+  <network name="loopback" ipRange="127.0.0.0/8">
+    <machine name="localhost" ipAddress="127.0.0.1">
+      <exposedPorts number="8080" mappedTo="//@network.1/@machine.4/@exposedPorts.0"/>
+    </machine>
+  </network>
+  <network name="compose" ipRange="172.21.0.0/16">
+    <machine name="db" ipAddress="172.21.0.4">
+      <exposedPorts number="3306"/>
+    </machine>
+    <machine name="kafka-0" ipAddress="172.21.0.5">
+      <exposedPorts number="9094"/>
+    </machine>
+    <machine name="kafka-1" ipAddress="172.21.0.2">
+      <exposedPorts number="9094"/>
+    </machine>
+    <machine name="kafka-2" ipAddress="172.21.0.3">
+      <exposedPorts number="9094"/>
+    </machine>
+    <machine name="books" ipAddress="172.21.0.6">
+      <exposedPorts number="8080" mappedFrom="//@network.0/@machine.0/@exposedPorts.0"/>
+    </machine>
+  </network>
+  <processes name="book-microservice (running inside Docker container)" connectsTo="//@network.1/@machine.0/@exposedPorts.0 //@network.1/@machine.1/@exposedPorts.0 //@network.1/@machine.2/@exposedPorts.0 //@network.1/@machine.3/@exposedPorts.0" listensOn="//@network.1/@machine.4/@exposedPorts.0"/>
+  <processes name="book-cli" connectsTo="//@network.0/@machine.0/@exposedPorts.0"/>
+</dn:Model>

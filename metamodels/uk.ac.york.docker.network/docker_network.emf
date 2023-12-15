@@ -1,0 +1,34 @@
+@namespace(uri="http://cs.york.ac.uk/eng2/dockerNetwork/1.0.0", prefix="dn")
+package dockerNetwork;
+
+class Model {
+	val Network[*] network;
+	val Process[*] processes;
+}
+
+abstract class Named {
+	attr String name;
+}
+
+// executing instance of a program
+class Process extends Named {
+	ref Port[*] connectsTo;
+	ref Port[*] listensOn;
+}
+
+class Network extends Named {
+	attr String ipRange;
+	val Machine[*] machine;
+}
+
+class Machine extends Named  {
+	attr String ipAddress;
+	val Port[*] exposedPorts;
+}
+
+class Port {
+	attr Integer number;
+
+	ref Port#mappedFrom mappedTo;
+	ref Port#mappedTo mappedFrom;
+}

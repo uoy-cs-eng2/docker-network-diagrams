@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="network" version="12.0.0.2017041100">
+  <ownedViewpoints name="dockerNetwork" label="Docker Networking" modelFileExtension="dockernetwork">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="networkDiagram" label="Network Diagram" domainClass="dockerNetwork::Model" enablePopupBars="true">
+      <metamodel href="http://cs.york.ac.uk/eng2/dockerNetwork/1.0.0#/"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="process" semanticCandidatesExpression="feature:processes" domainClass="dockerNetwork::Process">
+          <style xsi:type="style:EllipseNodeDescription" labelSize="12" showIcon="false" sizeComputationExpression="10" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_green']"/>
+          </style>
+        </nodeMappings>
+        <containerMappings name="networkContainer" semanticCandidatesExpression="feature:network" domainClass="dockerNetwork::Network">
+          <subNodeMappings name="machineNode" semanticCandidatesExpression="feature:machine" domainClass="dockerNetwork::Machine">
+            <borderedNodeMappings name="portBorderNode" semanticCandidatesExpression="feature:exposedPorts" domainClass="dockerNetwork::Port">
+              <style xsi:type="style:SquareDescription" labelSize="12" showIcon="false" labelExpression="feature:number" sizeComputationExpression="0" labelPosition="node" width="5" height="3">
+                <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+                <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+              </style>
+            </borderedNodeMappings>
+            <style xsi:type="style:SquareDescription" labelSize="12" showIcon="false" labelExpression="aql:self.name + ' (' + self.ipAddress + ')'" sizeComputationExpression="6" labelPosition="node" resizeKind="NSEW">
+              <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+              <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+            </style>
+          </subNodeMappings>
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12" showIcon="false" labelExpression="aql:self.name + ' (' + self.ipRange + ')'">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='blue']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+          </style>
+        </containerMappings>
+        <toolSections name="nodeCreationTools" label="Node Creation Tools">
+          <ownedTools xsi:type="tool:ContainerCreationDescription" name="createNetworkTool" label="Create Network" containerMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:CreateInstance" typeName="dockerNetwork::Network" referenceName="network"/>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool:NodeCreationDescription" name="portCreation" label="Create Port" nodeMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']/@subNodeMappings[name='machineNode']/@borderedNodeMappings[name='portBorderNode']">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:CreateInstance" typeName="dockerNetwork::Port" referenceName="exposedPorts"/>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool:NodeCreationDescription" name="createProcessTool" label="Create Process" nodeMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@nodeMappings[name='process']">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:CreateInstance" typeName="dockerNetwork::Process" referenceName="processes"/>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool:NodeCreationDescription" name="createMachineTool" label="Create Machine" nodeMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']/@subNodeMappings[name='machineNode']">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:CreateInstance" typeName="dockerNetwork::Machine" referenceName="machine"/>
+            </initialOperation>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+      <additionalLayers name="portMappingsLayer" label="Port Mappings" activeByDefault="true">
+        <edgeMappings name="portToPortLink" sourceMapping="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']/@subNodeMappings[name='machineNode']/@borderedNodeMappings[name='portBorderNode']" targetMapping="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']/@subNodeMappings[name='machineNode']/@borderedNodeMappings[name='portBorderNode']" targetFinderExpression="feature:mappedTo">
+          <style lineStyle="dash" sizeComputationExpression="2" routingStyle="manhattan">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="linkCreation" label="Link Creation Tools">
+          <ownedTools xsi:type="tool:EdgeCreationDescription" name="mapPortToTool" label="Map Port" precondition="aql:preSource &lt;> preTarget" edgeMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@additionalLayers[name='portMappingsLayer']/@edgeMappings[name='portToPortLink']">
+            <sourceVariable name="source"/>
+            <targetVariable name="target"/>
+            <sourceViewVariable name="sourceView"/>
+            <targetViewVariable name="targetView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:SetValue" featureName="mappedTo" valueExpression="var:target"/>
+            </initialOperation>
+          </ownedTools>
+        </toolSections>
+      </additionalLayers>
+      <additionalLayers name="processConnections" label="Process Connections" activeByDefault="true">
+        <edgeMappings name="processToPortLink" sourceMapping="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@nodeMappings[name='process']" targetMapping="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']/@subNodeMappings[name='machineNode']/@borderedNodeMappings[name='portBorderNode']" targetFinderExpression="feature:connectsTo">
+          <style sizeComputationExpression="2" routingStyle="manhattan">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_red']"/>
+            <centerLabelStyleDescription labelSize="12" showIcon="false">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="listensOnPortLink" sourceMapping="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@nodeMappings[name='process']" targetMapping="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@defaultLayer/@containerMappings[name='networkContainer']/@subNodeMappings[name='machineNode']/@borderedNodeMappings[name='portBorderNode']" targetFinderExpression="feature:listensOn">
+          <style targetArrow="Dot" sizeComputationExpression="2" routingStyle="manhattan">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='dark_green']"/>
+            <centerLabelStyleDescription labelSize="12">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <toolSections name="linkCreation" label="Link Creation Tools">
+          <ownedTools xsi:type="tool:EdgeCreationDescription" name="connectProcessToTool" label="Connect To Port" edgeMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@additionalLayers[name='processConnections']/@edgeMappings[name='processToPortLink']">
+            <sourceVariable name="source"/>
+            <targetVariable name="target"/>
+            <sourceViewVariable name="sourceView"/>
+            <targetViewVariable name="targetView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:SetValue" featureName="connectsTo" valueExpression="var:target"/>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool:EdgeCreationDescription" name="listenOnTool" label="Listen On Port" edgeMappings="//@ownedViewpoints[name='dockerNetwork']/@ownedRepresentations[name='networkDiagram']/@additionalLayers[name='processConnections']/@edgeMappings[name='listensOnPortLink']">
+            <sourceVariable name="source"/>
+            <targetVariable name="target"/>
+            <sourceViewVariable name="sourceView"/>
+            <targetViewVariable name="targetView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool_1:SetValue" featureName="listensOn" valueExpression="var:target"/>
+            </initialOperation>
+          </ownedTools>
+        </toolSections>
+      </additionalLayers>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="uk.ac.york.docker.network.design.Services"/>
+  </ownedViewpoints>
+</description:Group>

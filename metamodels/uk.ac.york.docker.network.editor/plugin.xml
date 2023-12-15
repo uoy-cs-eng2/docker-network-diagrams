@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated docker_network -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="dockerNetwork.presentation.DockerNetworkModelWizardID"
+            name="%_UI_DockerNetworkModelWizard_label"
+            class="dockerNetwork.presentation.DockerNetworkModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/DockerNetworkModelFile.gif">
+         <description>%_UI_DockerNetworkModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated docker_network -->
+      <editor
+            id="dockerNetwork.presentation.DockerNetworkEditorID"
+            name="%_UI_DockerNetworkEditor_label"
+            icon="icons/full/obj16/DockerNetworkModelFile.gif"
+            extensions="dockernetwork"
+            class="dockerNetwork.presentation.DockerNetworkEditor"
+            contributorClass="dockerNetwork.presentation.DockerNetworkActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>
